@@ -18,28 +18,51 @@ char    *ft_line(char *tmp, int len)
 char    *get_next_line(int fd)
 {
     static char buff[BUFFER_SIZE + 1u];
-    char    *join;
-    int  len;
-    int  size;       
+    char        *line;
+    char        *tmp;
+    char        *tmpbuff;
+    char        *join;
+    int         len;
+    int         size;
+
 
     if (BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX || fd < 0)
         return (NULL);
-    size = read(fd, buff, BUFFER_SIZE);
-    if (size <= 0)
-        return(NULL);
-    buff[size] = '\0';
-    len = 0;
-    while(buff[len] && len < size)
-    {
-        if (buff[len] == '\n')
-            return (ft_line(buff, len));
+   line = NULL;
+   while (1)
+   {
+        size = read(fd, buff, BUFFER_SIZE);
+        if (size <= 0)
+            return(line);
+        buff[size] = '\0';
+        len = 0;
+        while(len < size)
+        {
+            if (buff[len] == '\n')
+            {
+            tmp = ft_line(buff, len);
+            if (line)
+            {
+                join = ft_strjoin(line, tmp);
+                free(tmp);
+                free(line);
+                tmp = join;
+            }
+            tmpbuff = ft_substr(buff, len + 1, size - len - 1);
+            ft_strlcpy(buff, tmpbuff, size - len);
+            free(tmpbuff);
+            return (tmp);
+            }
         len++;
-    }
-    if (size > 0)
-    {
-        join = malloc(size);
-        read(fd, join, BUFFER_SIZE);
-        join = ft_strjoin(join, buff);
+        }
+        if (!line)
+           line = ft_strjoin("", buff);
+        else
+        {
+        tmp = ft_strjoin(line, buff);
+        free(line);
+        line = tmp;
+        }
     }
     return (NULL);
 }
@@ -51,9 +74,10 @@ int main()
     print = get_next_line(fd);
     while(print)
     {
-    printf("%s", print);
-    free(print);
-    print = get_next_line(fd);
+        printf("%s", print);
+        free(print);
+        print = get_next_line(fd);
     }
+    close(fd);
     return (0);
 }
