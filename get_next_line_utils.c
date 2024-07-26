@@ -14,20 +14,27 @@ int ft_strlen(char *str)
 char    *ft_strjoin(char *buff, char *str)
 {
     char    *join;
-    int idx;
-    int jdx;
+    int     idx;
+    int     jdx;
 
+    if (!buff)
+    {
+        buff = malloc(sizeof(char));
+        buff[0] = '\0';
+    }
+    if (!buff || !str)
+        return (NULL);
     join = malloc(ft_strlen(str) + ft_strlen(buff) + 1);
     if (!join)
         return (NULL);
-    idx = 0;
-    jdx = 0;
-    while(buff && buff[jdx])
-        join[idx++] = buff[jdx++];
+    idx = -1;
+    while(buff[++idx])
+        join[idx] = buff[idx];
     jdx = 0;
     while(str[jdx])
         join[idx++] = str[jdx++];
     join[idx] = '\0';
+    free(buff);
     return (join);
 }
 
@@ -41,25 +48,4 @@ char	*ft_strchr(char *buff, int c)
 	if (buff[idx] == c)
 		return (buff + idx);
 	return (0);
-}
-
-int  ft_strcpy(char *buff, char *tmp)
-{
-	int	idx;
-
-	idx = 0;
-    if (!tmp)
-    {
-        buff = NULL;
-        return (0);
-    }
-	while (tmp[idx])
-	{
-		buff[idx] = tmp[idx];
-		idx++;
-	}
-	buff[idx] = '\0';
-	while (tmp[idx])
-		idx++;
-	return (idx);
 }

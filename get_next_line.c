@@ -5,26 +5,25 @@
 char    *ft_read_file(char *buff, int fd)
 {
     char        *str;
-    char        *tmp;
     int         len;
 
-    str = malloc(BUFFER_SIZE + 1u);
+    str = malloc(BUFFER_SIZE + 1);
     if (!str)
         return (NULL);
     len = 1;
-     while (len > 0)
+     while (!ft_strchr(buff, '\n') && len > 0)
     {
         len = read(fd, str, BUFFER_SIZE);
         if (len < 0)
         {
+            free(buff);
+            buff = NULL;
             free(str);
+            str = NULL;
             return (NULL);
         }
         str[len] = '\0';
-        tmp = ft_strjoin(buff, str);
-        ft_strcpy(buff, tmp);
-        if (!ft_strchr(buff, '\n'))
-            break;
+        buff = ft_strjoin(buff, str);
     }
     free(str);
     return (buff);
@@ -35,7 +34,7 @@ char    *ft_line(char *buff)
     char    *str;
     int     idx;
 
-    if (buff == NULL)
+    if (!buff)
         return (NULL);
     idx = 0;
     while (buff[idx] && buff[idx] != '\n')
@@ -58,45 +57,42 @@ char    *ft_line_remain(char *buff)
     int     idx;
     int     jdx;
 
-    if (!ft_strlen(buff))
-        return (NULL);
     idx = 0;
     while (buff[idx] && buff[idx] != '\n')
-        idx++;   
-    jdx = idx;
+        idx++;
     if (!buff[idx])
         return (NULL);
-    while (buff[jdx])
-        jdx++;
-    remain = malloc((jdx - idx) + 1);
+    remain = malloc((ft_strlen(buff) + 1) - idx);
     if (!remain)
         return (NULL);
+    idx++;
     jdx = 0;
     while (buff[idx])
         remain[jdx++] = buff[idx++];
+    printf("idx is :%d, jdx is: %d", idx, jdx);
     remain[jdx] = '\0';
+    free(buff);
     return (remain);
 }
 
 char    *get_next_line(int fd)
 {
-    static char buff[BUFFER_SIZE + 1u];
-    char        *tmp;
+    static char *buff;
     char        *print;
     
     if (BUFFER_SIZE > INT_MAX || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    tmp = ft_read_file(buff, fd);
-    ft_strcpy(buff, tmp);
+    buff = ft_read_file(buff, fd);
+    if (!buff)
+        return (NULL);
     print = ft_line(buff);
-    tmp = ft_line_remain(buff);
-    ft_strcpy(buff, tmp);
+    buff = ft_line_remain(buff);
     return (print);
 }
 
 int main()
 {
-    char    *print;
+    char    *print2;
     int     fd;
     int     count;
     
@@ -105,17 +101,17 @@ int main()
     {
         printf("Error opening file");
         return (1);
-    } 
+    }
     count = 0;
     while (1)
     {
-        print = get_next_line(fd);
-        if (print == NULL)
+        print2 = get_next_line(fd);
+        if (print2 == NULL)
             break ;
         count++;
-        printf("[%d]:%s\n", count, print);
-        free(print);
-        print = NULL;
+        printf("[%d]:%s\n", count, print2);
+        free(print2);
+        print2 = NULL;
     }
     close(fd);
     return (0);
