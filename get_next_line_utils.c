@@ -11,66 +11,55 @@ int ft_strlen(char *str)
     return (len);
 }
 
-char    *ft_strjoin(char *join, char *buff)
+char    *ft_strjoin(char *buff, char *str)
 {
-    char    *str;
+    char    *join;
     int idx;
     int jdx;
 
-    if (!buff)
-        return (NULL);
-    str = malloc(ft_strlen(join) + ft_strlen(buff) + 1);
-    if (!str)
+    join = malloc(ft_strlen(str) + ft_strlen(buff) + 1);
+    if (!join)
         return (NULL);
     idx = 0;
     jdx = 0;
-    while(join && join[jdx])
-        str[idx++] = join[jdx++];
+    while(buff && buff[jdx])
+        join[idx++] = buff[jdx++];
     jdx = 0;
-    while(buff[jdx])
-        str[idx++] = buff[jdx++];
-    str[idx] = '\0';
-    return (str);
+    while(str[jdx])
+        join[idx++] = str[jdx++];
+    join[idx] = '\0';
+    return (join);
 }
 
-char    *ft_substr(char *buff, int start, int len)
+char	*ft_strchr(char *buff, int c)
 {
-	int     idx;
-    int     jdx;
-	char	*str;
+    int idx;
 
-	str = (char*)malloc(len + 1);
-	if (!str)
-		return (NULL);
-	idx = -1;
-	jdx = 0;
-	while (buff[++idx])
-	{
-		if (idx >= start && jdx < len)
-		{
-			str[jdx] = buff[idx];
-			jdx++;
-		}
-	}
-	str[jdx] = '\0';
-	return (str);
+    idx = 0;
+	while (buff[idx] && buff[idx] != c)
+		idx++;
+	if (buff[idx] == c)
+		return (buff + idx);
+	return (0);
 }
 
-int  ft_strlcpy(char *buff, char *tmpbuff, int size)
+int  ft_strcpy(char *buff, char *tmp)
 {
 	int	idx;
 
 	idx = 0;
-	if (size > 0)
+    if (!tmp)
+    {
+        buff = NULL;
+        return (0);
+    }
+	while (tmp[idx])
 	{
-		while (tmpbuff[idx] && idx < (size - 1))
-		{
-			buff[idx] = tmpbuff[idx];
-			idx++;
-		}
-		buff[idx] = 0;
+		buff[idx] = tmp[idx];
+		idx++;
 	}
-	while (tmpbuff[idx])
+	buff[idx] = '\0';
+	while (tmp[idx])
 		idx++;
 	return (idx);
 }
