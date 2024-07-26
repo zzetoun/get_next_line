@@ -6,6 +6,8 @@ int ft_strlen(char *str)
    int  len;
 
    len = 0;
+   if (!str)
+    return (0);
    while (str[len])
         len++;
     return (len);
@@ -22,7 +24,7 @@ char    *ft_strjoin(char *buff, char *str)
         buff = malloc(sizeof(char));
         buff[0] = '\0';
     }
-    if (!buff || !str)
+    if (!str || !buff)
         return (NULL);
     join = malloc(ft_strlen(str) + ft_strlen(buff) + 1);
     if (!join)
@@ -43,9 +45,11 @@ char	*ft_strchr(char *buff, int c)
     int idx;
 
     idx = 0;
+    if(!buff)
+        return (NULL);
 	while (buff[idx] && buff[idx] != c)
 		idx++;
 	if (buff[idx] == c)
 		return (buff + idx);
-	return (0);
+	return (NULL);
 }

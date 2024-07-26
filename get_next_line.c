@@ -34,7 +34,7 @@ char    *ft_line(char *buff)
     char    *str;
     int     idx;
 
-    if (!buff)
+    if (!ft_strlen(buff))
         return (NULL);
     idx = 0;
     while (buff[idx] && buff[idx] != '\n')
@@ -69,7 +69,6 @@ char    *ft_line_remain(char *buff)
     jdx = 0;
     while (buff[idx])
         remain[jdx++] = buff[idx++];
-    printf("idx is :%d, jdx is: %d", idx, jdx);
     remain[jdx] = '\0';
     free(buff);
     return (remain);
