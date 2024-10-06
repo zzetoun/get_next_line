@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zzetoun <zzetoun@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/23 12:39:14 by zzetoun           #+#    #+#             */
-/*   Updated: 2024/07/23 12:39:15 by zzetoun          ###   ########.ae       */
+/*   Created: 2024/07/28 14:11:13 by zzetoun           #+#    #+#             */
+/*   Updated: 2024/07/28 14:11:32 by zzetoun          ###   ########.ae       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	ft_strlen(char *str)
 {
@@ -40,19 +40,24 @@ int	ft_strchr(char *str)
 	return (0);
 }
 
-char	*ft_strjoin(char buff[], char *str)
+char	*ft_strjoin(char *buff, char *str)
 {
 	char	*join;
 	int		idx;
 	int		jdx;
 
 	if (!buff)
+	{
+		buff = malloc(sizeof(char));
+		if (!buff)
+			return (NULL);
 		buff[0] = '\0';
+	}
 	if (!str)
 		return (NULL);
 	join = malloc(ft_strlen(buff) + ft_strlen(str) + 1);
 	if (!join)
-		return (NULL);
+		return (free(buff), buff = NULL, NULL);
 	idx = -1;
 	while (buff[++idx])
 		join[idx] = buff[idx];
@@ -60,5 +65,5 @@ char	*ft_strjoin(char buff[], char *str)
 	while (str[jdx])
 		join[idx++] = str[jdx++];
 	join[idx] = '\0';
-	return (join);
+	return (free(buff), buff = NULL, join);
 }
